@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Failure Risk Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-blue-dark: #1d4ed8;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --bg-light: #f8fafc;
+            --border-light: #e2e8f0;
+            --border-focus: #93c5fd;
+            --shadow-color: rgba(59, 130, 246, 0.2);
+            --success-bg: #f0fdf4;
+            --success-text: #16a34a;
+            --error-bg: #fef2f2;
+            --error-text: #dc2626;
+            --prediction-bg: #fffbeb;
+            --prediction-text: #f59e0b;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+            color: var(--text-primary);
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            padding: 2.5rem;
+            max-width: 420px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2rem;
+        }
+
+        label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        form input[type="number"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            box-sizing: border-box; /* To ensure padding doesn't affect width */
+        }
+
+        form input[type="number"]:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px var(--shadow-color);
+        }
+        
+        /* Hides the arrows from number inputs for a cleaner look */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+          -webkit-appearance: none; 
+          margin: 0; 
+        }
+        input[type=number] {
+          -moz-appearance: textfield;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary-blue);
+            color: #fff;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.35);
+        }
+
+        .result, .prob {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .result {
+            background-color: var(--prediction-bg);
+            color: var(--prediction-text);
+        }
+
+        .prob {
+            margin-top: 0.8rem;
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+
+        ul {
+            padding: 1rem;
+            margin-top: 1.5rem;
+            list-style: none;
+            background: var(--error-bg);
+            border: 1px solid var(--error-text);
+            border-radius: 8px;
+        }
+
+        li {
+            color: var(--error-text);
+            font-weight: 500;
+            margin-bottom: 0.5em;
+        }
+        
+        li:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 480px) {
+            .card { 
+                padding: 2rem 1.5rem; 
+                margin: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Heart Failure Prediction</h2>
+        <form method="post" action="/predict">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" min="0" max="130" step="any" required>
+            
+            <label for="anaemia">Anaemia (0 for No, 1 for Yes):</label>
+            <input type="number" id="anaemia" name="anaemia" min="0" max="1" required>
+            
+            <label for="creatinine_phosphokinase">Creatinine Phosphokinase (mcg/L):</label>
+            <input type="number" id="creatinine_phosphokinase" name="creatinine_phosphokinase" required>
+            
+            <label for="diabetes">Diabetes (0 for No, 1 for Yes):</label>
+            <input type="number" id="diabetes" name="diabetes" min="0" max="1" required>
+            
+            <label for="ejection_fraction">Ejection Fraction (%):</label>
+            <input type="number" id="ejection_fraction" name="ejection_fraction" min="10" max="80" required>
+            
+            <label for="high_blood_pressure">High Blood Pressure (0 for No, 1 for Yes):</label>
+            <input type="number" id="high_blood_pressure" name="high_blood_pressure" min="0" max="1" required>
+            
+            <label for="platelets">Platelets (kiloplatelets/mL):</label>
+            <input type="number" id="platelets" name="platelets" required>
+            
+            <label for="serum_creatinine">Serum Creatinine (mg/dL):</label>
+            <input type="number" id="serum_creatinine" name="serum_creatinine" step="any" required>
+            
+            <label for="serum_sodium">Serum Sodium (mEq/L):</label>
+            <input type="number" id="serum_sodium" name="serum_sodium" required>
+            
+            <label for="sex">Sex (0 for Female, 1 for Male):</label>
+            <input type="number" id="sex" name="sex" min="0" max="1" required>
+            
+            <label for="smoking">Smoking (0 for No, 1 for Yes):</label>
+            <input type="number" id="smoking" name="smoking" min="0" max="1" required>
+            
+            <label for="time">Follow-up period (days):</label>
+            <input type="number" id="time" name="time" required>
+            
+            <button type="submit">Predict Risk</button>
+        </form>
+        
+        {% if prediction %}
+            <div class="result">Prediction: {{ prediction }}</div>
+            <div class="prob">Probability: {{ probability }}</div>
+        {% endif %}
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>
