@@ -131,8 +131,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 The model is trained on the Heart Failure Clinical Records Dataset, which contains medical records of 299 patients with heart failure collected during their follow-up period.
 
-## Contact
-
-Your Name - your.email@example.com
-
-Project Link: [https://github.com/yourusername/heart-failure-prediction](https://github.com/yourusername/heart-failure-prediction)
